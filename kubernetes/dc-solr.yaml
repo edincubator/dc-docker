@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dc-solr
+  labels:
+    app: dc-solr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dc-solr
+  template:
+    metadata:
+      labels:
+        app: dc-solr
+    spec:
+      containers:
+        - name: dc-solr
+          image: memaldi/ckan-solr
+          command: ["solr-create"]
+          args: ["-c", "ckan", "-d", "/conf"]  

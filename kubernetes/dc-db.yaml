@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dc-db
+  labels:
+    app: dc-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dc-db
+  template:
+    metadata:
+      labels:
+        app: dc-db
+    spec:
+      containers:
+        - name: dc-db
+          image: postgres
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: dc-secret
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: dc-secret
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_DB
+                  name: dc-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: dc-db
+              subPath: db
+      volumes:
+      - name: dc-db
+        persistentVolumeClaim:
+          claimName: dc-pvc

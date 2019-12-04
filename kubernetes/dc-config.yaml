@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dc-config
+data:
+  POSTGRES_DB: ckan_default
+  CKAN_STORAGE_PATH: /var/lib/ckan
+  CKAN_SOLR_URL: http://dc-solr:8983/solr/ckan
+  CKAN_REDIS_URL: redis://dc-redis:6379/0
+  CKAN_SITE_URL: https://dc.apps.openshift.deustotech.eu

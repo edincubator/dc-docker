@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Route
+metadata:
+  name: dc.apps.openshift.deustotech.eu
+  annotations:
+    kubernetes.io/tls-acme: 'true'
+spec:
+  host: dc.apps.openshift.deustotech.eu
+  to:
+    kind: Service
+    name: dc
+

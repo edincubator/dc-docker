@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dc
+  labels:
+    app: dc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dc
+  template:
+    metadata:
+      labels:
+        app: dc
+    spec:
+      containers:
+        - name: dc
+          image: edincubator/data-catalogue
+          env:
+          - name: CKAN_SQLALCHEMY_URL
+            valueFrom:
+              secretKeyRef:
+                key: CKAN_SQLALCHEMY_URL
+                name: dc-secret
+          - name: CKAN_STORAGE_PATH
+            valueFrom:
+              configMapKeyRef:
+                key: CKAN_STORAGE_PATH
+                name: dc-config
+          - name: CKAN_SOLR_URL
+            valueFrom:
+              configMapKeyRef:
+                key: CKAN_SOLR_URL
+                name: dc-config
+          - name: CKAN_REDIS_URL
+            valueFrom:
+              configMapKeyRef:
+                key: CKAN_REDIS_URL
+                name: dc-config
+          - name: CKAN_SITE_URL
+            valueFrom:
+              configMapKeyRef:
+                key: CKAN_SITE_URL
+                name: dc-config
+          - name: GA_ID
+            valueFrom:
+              secretKeyRef:
+                key: GA_ID
+                name: dc-secret
+          volumeMounts:
+            - name: ckan-config
+              mountPath: /etc/ckan/default/production.ini
+              subPath: production.ini
+            - name: ckan-data
+              mountPath: /var/lib/ckan
+              subPath: ckan-data
+      volumes:
+        - name: ckan-config
+          secret:
+            secretName: dc-secret
+            items:
+            - key: CKAN_CONFIG
+              path: production.ini
+        - name: ckan-data
+          persistentVolumeClaim:
+            claimName: dc-pvc
+
+
+        

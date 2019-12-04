@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dc-redis
+  labels:
+    app: dc-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dc-redis
+  template:
+    metadata:
+      labels:
+        app: dc-redis
+    spec:
+      containers:
+        - name: dc-redis
+          image: redis
